@@ -1,0 +1,91 @@
+<html>
+
+<head>
+    <title>Real Time Analytics Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+	<style>
+		/* Always set the map height explicitly to define the size of the div
+		* element that contains the map. */
+		#map {
+			height: 100%;
+		}
+		/* Optional: Makes the sample page fill the window. */
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="text-center">Twitch Real Time Monitoring Dashboard</h2>
+			</div>
+		</div>
+	<br>
+	<div class="row">
+		<div class="col-md-12" style="height:300px;">
+			<div id="map"></div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-md-4">
+			<table class="table outerTable">
+				<thead>
+					<tr>
+						<th>Total Donation Chart</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><canvas id="totalDonationChart"></canvas></td>
+					</tr>
+			    </tbody>
+			</table>
+			<table class="table outerTable">
+				<thead>
+					<tr>
+						<th>Total Donation Data</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>	
+							<div id="TotalDonation">
+								<table class="table table-bordered table-condensed table-hover innerTable">
+									<tr>
+										<thead>
+											<th>hourOfTheDay</th><th>dayOfTheWeek</th><th>country</th><th>totalDonations</th>
+										</thead>
+									</tr>
+								</table>
+							</div>	
+						</td>
+					</tr>
+			    </tbody>
+			</table>
+		</div>
+		<br>
+		<br>
+		<br>
+		<br>
+</div>
+
+	<script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="js/sockjs-1.1.1.min.js"></script>
+	<script type="text/javascript" src="js/stomp.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>`
+	<script type="text/javascript" src="js/Chart.min.js"></script>
+	<script type="text/javascript" src="js/script.js"></script>
+	<script async defer
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDplMA_nwsIAuO66c6B5Uloyu4Jev9i2R0&libraries=visualization&callback=initMap">
+	</script>
+
+</body>
+</html>
