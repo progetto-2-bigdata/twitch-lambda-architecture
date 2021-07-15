@@ -1,108 +1,61 @@
-<html>
-
-<head>
-    <title>IoT Traffic Data Monitoring Dashboard</title>
-    <link rel="styleshe/**
-
-
-
- var totalDonationData={
-            labels : ["Vehicle"],
-            datasets : [{
-                label : "Route",
-                data : [1]
-            }
-           ]
-        };
-
-
 
 jQuery(document).ready(function() {
-    //Charts
-    var ctx1 = document.getElementById("totalDonationChart").getContext("2d");
-    window.tChart = new Chart(ctx1, {
-                type: 'bar',
-                data: totalDonationData
-            });
-
-
     //tables
     var totalDonationList = jQuery("#total_donation");
+    var streamerDonation = jQuery("#streamer_donation");
+    var streamerFollower = jQuery("#streamer_follower");
+    var streamerViews = jQuery("#streamer_views");
 
     //use sockjs
     var socket = new SockJS('/stomp');
     var stompClient = Stomp.over(socket);
 
     stompClient.connect({ }, function(frame) {
-        //subscribe "/topic/trafficData" message
+        //subscribe "/topic/realTimeAnalyticsData" message
         stompClient.subscribe("/topic/realTimeAnalyticsData", function(data) {
-            var dataList = data.body;
-            var resp=jQuery.parseJSON(dataList);
+            var resp = jQuery.parseJSON(data.body);
 
-            //Total traffic
+            //Total Donation
             var totalOutput='';
-            jQuery.each(resp.totalTraffic, function(i,vh) {
-                 totalOutput +="<tbody><tr><td>"+ vh.routeId+"</td><td>"+vh.vehicleType+"</td><td>"+vh.totalCount+"</td><td>"+vh.timeStamp+"</td></tr></tbody>";
+            jQuery.each(resp.donations, function(i,d) {
+                 totalOutput +="<tbody><tr><td>"+ d.hourOfTheDay+"</td><td>"+d.dayOfTheWeek+"</td><td>"+d.country+"</td><td>"+d.totalDonations+"</td></tr></tbody>";
             });
-            var t_tabl_start = "<table class='table table-bordered table-condensed table-hover innerTable'><thead><tr><th>Route</th><th>Vehicle</th><th>Count</th><th>Time</th></tr></thead>";
+            
+            var t_tabl_start = "<table class='table table-bordered table-condensed table-hover innerTable'><thead><th>hourOfTheDay</th><th>dayOfTheWeek</th><th>country</th><th>totalDonations</th></thead>";
             var t_tabl_end = "</table>";
-            totalTrafficList.html(t_tabl_start+totalOutput+t_tabl_end);
-
-            //draw total donation chart
-            drawBarChart(resp.donation,totalDonationData);
-
+            
+            totalDonationList.html(t_tabl_start+totalOutput+t_tabl_end);
+            
+            var totalOutput='';
+            jQuery.each(resp.streamerDonations, function(i,d) {
+                 totalOutput +="<tbody><tr><td>"+ d.streamerID+"</td><td>"+d.year+"</td><td>"+d.month+"</td><td>"+d.totalDonations+"</td></tr></tbody>";
+            });
+            
+            var t_tabl_start = "<table class='table table-bordered table-condensed table-hover innerTable'><thead><th>streamerID</th><th>year</th><th>month</th><th>totalDonations</th></thead>";
+            var t_tabl_end = "</table>";
+            
+            streamerDonation.html(t_tabl_start+totalOutput+t_tabl_end);
+            
+            var totalOutput='';
+            jQuery.each(resp.streamerFollower, function(i,d) {
+                 totalOutput +="<tbody><tr><td>"+ d.streamerID+"</td><td>"+d.dayOfTheWeek+"</td><td>"+d.avgFollowersAdded+"</td></tr></tbody>";
+            });
+            
+            var t_tabl_start = "<table class='table table-bordered table-condensed table-hover innerTable'><thead><th>streamerID</th><th>dayOfTheWeek</th><th>avgFollowersAdded</th></thead>";
+            var t_tabl_end = "</table>";
+            
+            streamerFollower.html(t_tabl_start+totalOutput+t_tabl_end);
+            
+            var totalOutput='';
+            jQuery.each(resp.streamerView, function(i,d) {
+                 totalOutput +="<tbody><tr><td>"+ d.streamerID+"</td><td>"+d.hourOfTheDay+"</td><td>"+d.avgViews+"</td></tr></tbody>";
+            });
+            
+            var t_tabl_start = "<table class='table table-bordered table-condensed table-hover innerTable'><thead><th>streamerID</th><th>hourOfTheDay</th><th>avgViews</th></thead>";
+            var t_tabl_end = "</table>";
+            
+            streamerViews.html(t_tabl_start+totalOutput+t_tabl_end);
         });
     });
 });
 
-function drawBarChart(trafficDetail,trafficChartData){
-    //Prepare data for total traffic chart
-    var chartLabel = [ "Bus","Large Truck",  "Private Car","Small Truck", "Taxi"];
-    var routeName = ["Route-37", "Route-82", "Route-43"];
-    var chartData0 =[0,0,0,0,0], chartData1 =[0,0,0,0,0], chartData2 =[0,0,0,0,0];
-
-    jQuery.each(trafficDetail, function(i,vh) {
-
-        if(vh.routeId == routeName[0]){
-            chartData0.splice(chartLabel.indexOf(vh.vehicleType),1,vh.totalCount);
-        }
-        if(vh.routeId == routeName[1]){
-            chartData1.splice(chartLabel.indexOf(vh.vehicleType),1,vh.totalCount);
-        }
-        if(vh.routeId == routeName[2]){
-            chartData2.splice(chartLabel.indexOf(vh.vehicleType),1,vh.totalCount);
-        }
-    });
-
-    var trafficData = {
-        labels : chartLabel,
-        datasets : [{
-            label				  : routeName[0],
-            borderColor           : "#878BB6",
-            backgroundColor       : "#878BB6",
-            data                  : chartData0
-        },
-        {
-            label				  : routeName[1],
-            borderColor           : "#4ACAB4",
-            backgroundColor       : "#4ACAB4",
-            data                  : chartData1
-        },
-        {
-            label				  : routeName[2],
-            borderColor           : "#FFEA88",
-            backgroundColor       : "#FFEA88",
-            data                  : chartData2
-        }
-
-        ]
-    };
-      //update chart
-      trafficChartData.datasets=trafficData.datasets;
-      trafficChartData.labels=trafficData.labels;
- }
-
-
- function getRandomColor() {
-    return  'rgba(' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + Math.round(Math.random() * 255) + ',' + ('1') + ')';
-};
