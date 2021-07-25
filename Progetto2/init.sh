@@ -13,4 +13,4 @@ docker exec -it cassandra3  cqlsh -u cassandra -p cassandra -f /schema.cql
 # docker exec cassandra3 cqlsh --username cassandra --password cassandra  -f /schema.cql
 
 # Crea Kafka topic "live-data"
-docker exec kafka-stream kafka-topics --create --topic live-data --partitions 1 --replication-factor 1 --if-not-exists --zookeeper zookeeper:2181
+docker exec kafka-stream kafka-topics --create --topic live-data --partitions 1 --replication-factor 3 --if-not-exists --zookeeper zookeeper:2181
